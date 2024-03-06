@@ -4,20 +4,39 @@ from telebot import types
 from telebot.types import WebAppInfo
 
 bot = telebot.TeleBot('6397644079:AAGJmkwjUSp4HfPVb-ZjHdScfaHOqzdLKLs')
-conn = sqlite3.connect("bot.db", check_same_thread=False)
+conn = sqlite3.connect("C:/BasesForBOTS/bot.db", check_same_thread=False)
 cur = conn.cursor()
 
-web_park = WebAppInfo(url="https://anananastejsi.github.io/first/")
+web_app=WebAppInfo(url="https://anananastejsi.github.io/first/")
+
 
 @bot.message_handler(content_types=['text'])
 def start(message):
     if message.text == '/start':
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        btn_parks = types.KeyboardButton('Английский язык', web_app=web_park)
-        btn_mons = types.KeyboardButton('Французский_язык', web_app=web_park)
-        markup.add(btn_parks, btn_mons)
-        bot.send_message(message.from_user.id, 'Выберите, что Вы предпочитаете сейчас.', reply_markup=markup)
+        btn_app = types.KeyboardButton('Языки', web_app=web_app)
+        markup.add(btn_app)
+        bot.send_message(message.from_user.id, 'УЗНАТЬ!', reply_markup=markup)
 
 @bot.message_handler(content_types='web_app_data')
 def buy_process(web_app_message):
     a = web_app_message.web_app_data.button_text
+
+    if a == 'Английский':
+        a = 'Английский_язык'
+    elif a == 'Французский':
+        a = 'Французский_язык'
+    elif a == 'Японский':
+        a = 'Японский_язык'
+    elif a == 'Мотивация':
+        a = 'Мотивационная_цитата'
+
+    bot.send_message(web_app_message.chat.id,
+                     f'{conn.execute(f"Select NAME from {a} WHERE ID == {web_app_message.web_app_data.data}").fetchone()[0]}\n\n'
+                     f'{conn.execute(f"Select DESCRIPTION from {a} WHERE ID =={web_app_message.web_app_data.data}").fetchone()[0]}')
+
+    x = conn.execute(f"Select LAT, LEN from {a} WHERE ID == {web_app_message.web_app_data.data}").fetchone()
+    bot.send_location(web_app_message.chat.id, x[0], x[1])
+
+
+bot.polling(none_stop=True, interval=0)
