@@ -35,9 +35,5 @@ def buy_process(web_app_message):
                      f'{conn.execute(f"Select NAME from {a} WHERE ID == {web_app_message.web_app_data.data}").fetchone()[0]}\n\n'
                      f'{conn.execute(f"Select DESCRIPTION from {a} WHERE ID =={web_app_message.web_app_data.data}").fetchone()[0]}')
 
-    x = conn.execute(f"Select LAT, LEN from {a} WHERE ID == {web_app_message.web_app_data.data}").fetchone()
-    bot.send_location(web_app_message.chat.id, x[0], x[1])
-
-
 bot.polling(none_stop=True, interval=0)
 
