@@ -32,10 +32,10 @@ def buy_process(web_app_message):
         a = 'Мотивационная_цитата'
 
     bot.send_message(web_app_message.chat.id,
-                     f'{conn.execute(f"Select NAME from {a} WHERE id == {web_app_message.web_app_data.data}").fetchone()[0]}\n\n'
-                     f'{conn.execute(f"Select DESCRIPTION from {a} WHERE id =={web_app_message.web_app_data.data}").fetchone()[0]}')
+                     f'{conn.execute(f"Select NAME from {a} WHERE ID == {web_app_message.web_app_data.data}").fetchone()[0]}\n\n'
+                     f'{conn.execute(f"Select DESCRIPTION from {a} WHERE ID =={web_app_message.web_app_data.data}").fetchone()[0]}')
 
-    x = conn.execute(f"Select LAT, LEN from {a} WHERE id == {web_app_message.web_app_data.data}").fetchone()
+    x = conn.execute(f"Select LAT, LEN from {a} WHERE ID == {web_app_message.web_app_data.data}").fetchone()
     bot.send_location(web_app_message.chat.id, x[0], x[1])
 
 
